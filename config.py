@@ -1,5 +1,5 @@
 DEPLOY_TARGET = "render"
-APP_NAME = "my-cra-app"
+APP_NAME = "my-rec-app"
 RENDER_SERVICE_TYPE = "static_site"
 PUBLISH_PATH = "./build"
 REGION = "oregon"
