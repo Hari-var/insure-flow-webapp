@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+'on':
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master' && needs.build.result == 'success'
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifact
+        path: dist
+    - name: Verify download
+      run: ls -lah dist
+    - name: Zip artifact
+      run: cd dist && zip -r ../release.zip . && cd ..
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Provision Resource Group
+      run: az group create --name health_check --location eastus
+    - name: Provision App Service Plan
+      run: az appservice plan create --name ${{ secrets.AZURE_WEBAPP_NAME }}-plan
+        --resource-group health_check --sku B1 --is-linux
+    - name: Provision Web App
+      run: az webapp create --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group
+        health_check --plan ${{ secrets.AZURE_WEBAPP_NAME }}-plan --runtime 'NODE:20-lts'
+    - name: Set startup command
+      run: az webapp config set --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group
+        health_check --startup-file 'npm start'
+    - name: Deploy to Azure Web App
+      run: az webapp deploy --name ${{ secrets.AZURE_WEBAPP_NAME }} --resource-group
+        health_check --src-path release.zip --type zip
