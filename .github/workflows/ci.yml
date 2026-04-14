@@ -23,9 +23,12 @@ jobs:
       run: mkdir -p build-output && if [ -d 'build' ]; then cp -r build/* build-output/;
         elif [ -d 'dist' ]; then cp -r dist/* build-output/; else echo 'No build output
         found'; exit 1; fi
+    - name: Verify build artifacts
+      run: ls -la build-output/ && echo 'Build artifacts ready for upload'
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
         path: dist/
         retention-days: 7
+        if-no-files-found: error
