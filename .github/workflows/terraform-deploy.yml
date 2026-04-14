@@ -44,7 +44,7 @@ jobs:
         github.repository }}-${{ github.ref_name }}.tfstate"
       working-directory: ./terraform
     - name: "\U0001F4CA Terraform Plan"
-      run: terraform plan \  -var="app_name=${{ secrets.APP_NAME || 'my-app1334984'
+      run: terraform plan \  -var="app_name=${{ secrets.APP_NAME || 'my-app133484'
         }}" \  -var="environment=dev" \  -var="location=${{ secrets.AZURE_LOCATION
         || 'eastus' }}" \  -out=tfplan
       working-directory: ./terraform
