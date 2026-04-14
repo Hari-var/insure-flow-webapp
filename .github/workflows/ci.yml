@@ -18,7 +18,11 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Build application
-      run: npm run build && mkdir -p build-output && cp -r dist/* build-output/
+      run: npm run build
+    - name: Prepare artifacts
+      run: mkdir -p build-output && if [ -d 'build' ]; then cp -r build/* build-output/;
+        elif [ -d 'dist' ]; then cp -r dist/* build-output/; else echo 'No build output
+        found'; exit 1; fi
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
