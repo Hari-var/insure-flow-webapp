@@ -38,15 +38,12 @@ jobs:
       run: terraform validate
       working-directory: ./terraform
     - name: 🚀 Terraform Init
-      run: terraform init -backend-config="resource_group_name=${{ secrets.TF_STATE_RESOURCE_GROUP
-        }}" -backend-config="storage_account_name=${{ secrets.TF_STATE_STORAGE_ACCOUNT
-        }}" -backend-config="container_name=tfstate" -backend-config="key=${{ github.repository
-        }}-${{ github.ref_name }}.tfstate"
+      run: terraform init
       working-directory: ./terraform
     - name: 📊 Terraform Plan
       run: terraform plan -var="app_name=${{ secrets.APP_NAME || 'my-app133484' }}"
-        -var="environment=dev" -var="location=${{ secrets.AZURE_LOCATION || 'eastus'
-        }}" -out=tfplan
+        -var="resource_group_name=health_check" -var="location=${{ secrets.AZURE_LOCATION
+        || 'eastus' }}" -var="environment=dev" -var="common_tags=" -out=tfplan
       working-directory: ./terraform
     - name: 🏗️ Terraform Apply
       run: terraform apply -auto-approve tfplan
@@ -55,14 +52,30 @@ jobs:
       id: terraform-outputs
       run: 'echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
 
-        echo "resource_group=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT'
+        echo "resource_group_name=$(terraform output -raw resource_group_name)" >>
+        $GITHUB_OUTPUT
+
+        echo "resource_group_id=$(terraform output -raw resource_group_id)" >> $GITHUB_OUTPUT
+
+        echo "app_name=$(terraform output -raw app_name)" >> $GITHUB_OUTPUT
+
+        echo "service_plan_name=$(terraform output -raw service_plan_name)" >> $GITHUB_OUTPUT'
       working-directory: ./terraform
     - name: ✅ Deployment Summary
       run: 'echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
 
         echo "- **App URL**: ${{ steps.terraform-outputs.outputs.app_url }}" >> $GITHUB_STEP_SUMMARY
 
-        echo "- **Resource Group**: ${{ steps.terraform-outputs.outputs.resource_group
+        echo "- **Resource Group**: ${{ steps.terraform-outputs.outputs.resource_group_name
+        }}" >> $GITHUB_STEP_SUMMARY
+
+        echo "- **Resource Group**: ${{ steps.terraform-outputs.outputs.resource_group_id
+        }}" >> $GITHUB_STEP_SUMMARY
+
+        echo "- **App Name**: ${{ steps.terraform-outputs.outputs.app_name }}" >>
+        $GITHUB_STEP_SUMMARY
+
+        echo "- **Service Plan Name**: ${{ steps.terraform-outputs.outputs.service_plan_name
         }}" >> $GITHUB_STEP_SUMMARY
 
         echo "- **Environment**: dev" >> $GITHUB_STEP_SUMMARY
