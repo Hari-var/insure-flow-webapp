@@ -1,52 +1,66 @@
 name: 🏗️ Terraform Infrastructure Deployment
-'on':
+
+on:
   workflow_dispatch:
     inputs:
       approval_id:
         description: Approval ID for tracking
         required: true
         type: string
+
 env:
   TF_VERSION: 1.6.0
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
 jobs:
   terraform:
     name: 🚀 Deploy Infrastructure
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       id-token: write
+
     steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-    - name: 🔧 Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
-        terraform_wrapper: false
-    - name: 🔐 Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: 🚀 Terraform Init
-      run: terraform init
-      working-directory: ./terraform
-    - name: 📊 Terraform Plan
-      run: terraform plan -var="app_name=my-app133484" -var="environment=dev" -out=tfplan
-      working-directory: ./terraform
-    - name: 🏗️ Terraform Apply
-      run: terraform apply -auto-approve tfplan
-      working-directory: ./terraform
-    - name: 📤 Export Outputs
-      id: terraform-outputs
-      run: |
-        echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
-      working-directory: ./terraform
-    - name: ✅ Deployment Summary
-      run: |
-        echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
-        echo "- **App URL**: ${{ steps.terraform-outputs.outputs.app_url }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Environment**: dev" >> $GITHUB_STEP_SUMMARY
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+
+      - name: 🔐 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.ARM_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.ARM_TENANT_ID }}"
+            }
+
+      - name: 🚀 Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: 📊 Terraform Plan
+        run: terraform plan -var="app_name=my-app133484" -var="environment=dev" -out=tfplan
+        working-directory: ./terraform
+
+      - name: 🏗️ Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./terraform
+
+      - name: 📤 Export Outputs
+        id: terraform-outputs
+        run: |
+          echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
+        working-directory: ./terraform
+
+      - name: ✅ Deployment Summary
+        run: |
+          echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "- **App URL**: ${{ steps.terraform-outputs.outputs.app_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: dev" >> $GITHUB_STEP_SUMMARY
