@@ -25,12 +25,12 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: my-app1369784
+        app-name: my-app136984
         resource-group: health_check
         package: ./artifacts/dist
     - name: Validate deployment
       run: "\n# Wait for deployment to be ready\nsleep 30\n\n# Test the deployed application\n\
-        APP_URL=\"https://my-app1369784.azurewebsites.net\"\necho \"Testing deployment\
+        APP_URL=\"https://my-app136984.azurewebsites.net\"\necho \"Testing deployment\
         \ at $APP_URL\"\n\n# Check if app responds\nHTTP_STATUS=$(curl -s -o /dev/null\
         \ -w \"%{http_code}\" $APP_URL)\nif [ $HTTP_STATUS -eq 200 ]; then\n  echo\
         \ \"\u2705 Deployment successful - App is responding\"\n  echo \"\U0001F310\
