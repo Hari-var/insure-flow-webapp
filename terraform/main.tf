@@ -62,6 +62,8 @@ resource "azurerm_linux_web_app" "main" {
   site_config {
     always_on = false
     
+    startup_command = "npx serve -s ."
+    
     application_stack {
       
       node_version = "18-lts"
