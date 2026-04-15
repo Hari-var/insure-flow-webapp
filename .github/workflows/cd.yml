@@ -29,8 +29,8 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: my-app17848nv4-yem62wnf
-        resource-group-name: my-app17848nv4-rg
+        app-name: my-app1784jnv4-dkwpsm7u
+        resource-group-name: health_check
         package: ./artifacts/
     - name: Validate deployment
       run: "\n# Wait for deployment to be ready\nsleep 30\n\n# Get app URL from Terraform\
