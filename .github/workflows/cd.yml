@@ -35,6 +35,12 @@ jobs:
         app-name: my-app07nv4-riguw7x4
         resource-group-name: my-app07nv4-rg
         package: ./artifacts/
+    - name: Debug artifacts structure
+      run: |
+        echo "Listing artifacts"
+        ls -la ./artifacts
+        echo "Recursive listing"
+        ls -R ./artifacts
     - name: Validate deployment
       run: "\n# Wait for deployment to be ready\nsleep 30\n\n# Get the Azure Web App\
         \ URL directly (Terraform state not available in CD environment)\nAPP_URL=\"\
