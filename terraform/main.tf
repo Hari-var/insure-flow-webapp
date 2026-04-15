@@ -71,5 +71,14 @@ resource "azurerm_linux_web_app" "main" {
     }
   }
   
+  app_settings = {
+    WEBSITE_NODE_DEFAULT_VERSION = "18-lts"
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = "false"
+    WEBSITE_HTTPLOGGING_RETENTION_DAYS = "7"
+    WEBSITE_NODE_DEFAULT_VERSION = "18-lts"
+    NPM_CONFIG_PRODUCTION = "false"
+    WEBSITE_RUN_FROM_PACKAGE = "1"
+  }
+  
   tags = var.common_tags
 }
