@@ -1,0 +1,67 @@
+name: 🏗️ Terraform Infrastructure Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      approval_id:
+        description: Approval ID for tracking
+        required: true
+        type: string
+env:
+  TF_VERSION: 1.6.0
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+jobs:
+  terraform:
+    name: 🚀 Deploy Infrastructure
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+    - name: 🔧 Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+        terraform_wrapper: false
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: 🚀 Terraform Init
+      run: terraform init
+      working-directory: ./terraform
+    - name: 🔍 Check for Existing Resources
+      run: |
+        # Try to import existing resource group if it exists
+        RG_NAME="my-app18078nv4-rg"
+        if az group show --name $RG_NAME --output none 2>/dev/null; then
+          echo "Resource group $RG_NAME exists, attempting to import..."
+          terraform import azurerm_resource_group.main "/subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/$RG_NAME" || echo "Import failed or resource already managed"
+        else
+          echo "Resource group $RG_NAME does not exist, will be created"
+        fi
+      working-directory: ./terraform
+    - name: 📊 Terraform Plan
+      run: terraform plan -var="app_name=my-app18078nv4" -var="environment=dev" -out=tfplan
+      working-directory: ./terraform
+    - name: 🏗️ Terraform Apply
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./terraform
+    - name: 📤 Export Outputs
+      id: terraform-outputs
+      run: |
+        APP_URL=$(terraform output -raw app_url)
+        echo "app_url=$APP_URL" >> $GITHUB_OUTPUT
+        echo "APP_URL=$APP_URL" >> $GITHUB_ENV
+        echo "🔗 App URL: $APP_URL"
+      working-directory: ./terraform
+    - name: ✅ Deployment Summary
+      run: |
+        echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+        echo "- **App URL**: ${{ steps.terraform-outputs.outputs.app_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment**: dev" >> $GITHUB_STEP_SUMMARY
+        echo "🎉 DEPLOYMENT_SUCCESS: ${{ steps.terraform-outputs.outputs.app_url }}"
