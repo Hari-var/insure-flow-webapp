@@ -37,7 +37,7 @@ jobs:
     - name: 🔍 Check for Existing Resources
       run: |
         # Try to import existing resource group if it exists
-        RG_NAME="my-insurance-application1423-rg"
+        RG_NAME="Vm-insurance-application1423-rg"
         if az group show --name $RG_NAME --output none 2>/dev/null; then
           echo "Resource group $RG_NAME exists, attempting to import..."
           terraform import azurerm_resource_group.main "/subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/$RG_NAME" || echo "Import failed or resource already managed"
@@ -46,7 +46,7 @@ jobs:
         fi
       working-directory: ./terraform
     - name: 📊 Terraform Plan
-      run: terraform plan -var="app_name=my-insurance-application1423" -var="environment=dev" -out=tfplan
+      run: terraform plan -var="app_name=Vm-insurance-application1423" -var="environment=dev" -out=tfplan
       working-directory: ./terraform
     - name: 🏗️ Terraform Apply
       run: terraform apply -auto-approve tfplan
