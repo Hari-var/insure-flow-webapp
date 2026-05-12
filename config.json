@@ -2,7 +2,7 @@
   "config": {
     "RESOURCE_GROUP": "my-resource-group",
     "LOCATION": "eastus",
-    "APP_NAME": "my-web-app1",
+    "APP_NAME": "my-web-app12",
     "DEPLOY_TARGET": "azure-app-service",
     "ENVIRONMENT": "staging",
     "BRANCH": "main",
