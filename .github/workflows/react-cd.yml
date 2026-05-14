@@ -22,7 +22,7 @@ jobs:
         with:
           workflow: react-ci.yml
           run_id: ${{ github.event.workflow_run.id }}
-          name: insureflowwebappdrop
+          name: insure-flow-webapp-drop
           path: app
       - name: Debug files
         run: ls -R app
