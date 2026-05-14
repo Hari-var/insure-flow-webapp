@@ -11,7 +11,7 @@
     "APP_SERVICE_SKU": "B1"
   },
   "techstack": {
-    "language": "node.js",
+    "language": "React",
     "framework": "React",
     "buildtool": "mpm",
     "hasDockerfile": false,
