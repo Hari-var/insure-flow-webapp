@@ -1,47 +1,40 @@
 name: Web App CD Pipeline
- 
+
 on:
   workflow_run:
     workflows:
       - React CI Pipeline
     types:
       - completed
- 
+
 env:
   AZURE_WEBAPP_NAME: "Testingwebapp"
- 
+
 jobs:
   deploy:
-    name: Deploy to Azure Web App
     runs-on: ubuntu-latest
- 
+
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
- 
+
     steps:
-      # Download artifact from CI pipeline
       - name: Download Build Artifact
         uses: dawidd6/action-download-artifact@v3
         with:
+          workflow: react-ci.yml
+          run_id: ${{ github.event.workflow_run.id }}
           name: insure-flow-webapp-drop
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
-          path: build
- 
-      # Zip build folder
-      - name: Archive Build
-        run: |
-          cd build
-          zip -r ../app.zip .
- 
-      # Azure Login
+          path: .
+
+      - name: Verify Files
+        run: ls -R
+
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
- 
-      # Deploy to Azure Web App
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: app.zip
+          package: build
