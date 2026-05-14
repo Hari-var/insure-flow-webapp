@@ -1,29 +1,39 @@
-# yaml-templates/github-actions/cd/webapp-cd.yml
- 
-name: "Web App CD Pipeline"
+name: Web App CD Pipeline
  
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - React CI Pipeline
+    types:
+      - completed
  
 env:
-  AZURE_WEBAPP_NAME: "${{ github.event.repository.name }}"
+  AZURE_WEBAPP_NAME: "your-webapp-name"
  
 jobs:
   deploy:
-    name: "Deploy to Azure Web App"
+    name: Deploy to Azure Web App
     runs-on: ubuntu-latest
-    environment: "production"
  
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
  
     steps:
+      # Download artifact from CI pipeline
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: python-app
-          github-token: ${{ secrets.GH_TOKEN }}
+          name: react-build
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
+          path: build
  
-      # Azure Login using Service Principal
+      # Zip build folder
+      - name: Archive Build
+        run: |
+          cd build
+          zip -r ../app.zip .
+ 
+      # Azure Login
       - name: Azure Login
         uses: azure/login@v2
         with:
