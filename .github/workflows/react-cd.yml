@@ -3,12 +3,7 @@
 name: "Web App CD Pipeline"
  
 on:
-  workflow_run:
-    workflows: ["Python CI Pipeline"]
-    types:
-      - completed
-    branches:
-      - main
+  workflow_dispatch:
  
 env:
   AZURE_WEBAPP_NAME: "${{ github.event.repository.name }}"
