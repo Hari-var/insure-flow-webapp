@@ -19,5 +19,5 @@
     "hasTerraform": false
   },
   "startup_command": "npm run dev",
-  "startup_command_filepath": "none.sh"
+  "startup_command_filepath": "none"
 }
