@@ -17,14 +17,16 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Download Build Artifact
+      - name: Download Artifact
         uses: dawidd6/action-download-artifact@v3
         with:
           workflow: react-ci.yml
           run_id: ${{ github.event.workflow_run.id }}
           name: insure-flow-webapp-drop
-          path: .
-
+          path: app
+      - name: Debug files
+        run: ls -R app
+        
       - name: Verify Files
         run: ls -R
 
@@ -32,9 +34,8 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: build
+          package: app
