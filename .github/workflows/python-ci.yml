@@ -2,11 +2,11 @@ name: Python CI Pipeline
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 env:
   PYTHON_VERSION: '3.12'
-  PROJECT_NAME: 'insure-flow-webapp'
+  PROJECT_NAME: 'Hari-var/insure-flow-webapp'
 jobs:
   build:
     name: Build Python App
