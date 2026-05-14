@@ -6,18 +6,18 @@
     "DEPLOY_TARGET": "azure-app-service",
     "ENVIRONMENT": "staging",
     "BRANCH": "main",
-    "ENABLE_SAST": true,
+    "ENABLE_SAST": false,
     "ENABLE_DAST": false,
     "APP_SERVICE_SKU": "B1"
   },
   "techstack": {
-    "language": "python",
-    "framework": "fastapi",
-    "buildtool": "pip",
-    "hasDockerfile": true,
+    "language": "node.js",
+    "framework": "React",
+    "buildtool": "mpm",
+    "hasDockerfile": false,
     "hasHelm": false,
-    "hasTerraform": true
+    "hasTerraform": false
   },
-  "startup_command": "uvicorn main:app --host 0.0.0.0 --port 8000",
-  "startup_command_filepath": "startup.sh"
+  "startup_command": "npm run dev",
+  "startup_command_filepath": none
 }
