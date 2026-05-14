@@ -11,9 +11,9 @@
     "APP_SERVICE_SKU": "B1"
   },
   "techstack": {
-    "language": "python",
-    "framework": "fastapi",
-    "buildtool": "pip",
+    "language": "react",
+    "framework": "react",
+    "buildtool": "npm",
     "hasDockerfile": false,
     "hasHelm": false,
     "hasTerraform": false
