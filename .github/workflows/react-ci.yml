@@ -60,7 +60,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: build/
+          path: .
       - name: Publish insure-flow-webapp-drop
         uses: actions/upload-artifact@v4
         with:
