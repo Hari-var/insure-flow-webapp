@@ -8,8 +8,8 @@ on:
       - master
 env:
   NODE_VERSION: '20.x'
-  PROJECT_NAME: Hari-var/insure-flow-webapp
-  ARTIFACT_NAME: insure-flow-webapp-drop
+  PROJECT_NAME: 'insure-flow-webapp'
+  ARTIFACT_NAME: 'insureflowwebappdrop'
 jobs:
   build:
     name: Build React Application
@@ -61,8 +61,8 @@ jobs:
         with:
           name: build-output
           path: build/
-      - name: Publish insure-flow-webapp-drop
+      - name: Publish insureflowwebappdrop
         uses: actions/upload-artifact@v4
         with:
-          name: insure-flow-webapp-drop
+          name: insureflowwebappdrop
           path: build/
