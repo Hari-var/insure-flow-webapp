@@ -45,12 +45,12 @@ jobs:
       - name: Semgrep — Code Analysis
         uses: returntocorp/semgrep-action@v1
         with:
-          config: auto
+          config: 'auto'
       - name: Trivy — Dependency Scan
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: fs
-          scan-ref: .
+          scan-type: 'fs'
+          scan-ref: '.'
   publish:
     name: Publish Artifact
     runs-on: ubuntu-latest
