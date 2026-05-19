@@ -15,7 +15,7 @@ jobs:
       with:
         workflow: react-ci.yml
         run_id: ${{ github.event.workflow_run.id }}
-        name: insure-flow-webapp-drop
+        name: insureflowwebappdrop
         path: app
     - name: Debug files
       run: ls -R app
@@ -26,10 +26,11 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Set Startup Command
-      run: az webapp config set \
-        --name ${{ env.AZURE_WEBAPP_NAME }} \
-        --resource-group my-resource-group \
-        --startup-file "npx serve -s /home/site/wwwroot"
+      run: |
+        az webapp config set \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --resource-group my-resource-group \
+          --startup-file "npx serve -s /home/site/wwwroot"
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
