@@ -25,6 +25,12 @@ jobs:
       uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Disable Oryx Build
+      run: |
+        az webapp config appsettings set \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --resource-group my-resource-group \
+          --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
     - name: Set Startup Command
       run: |
         az webapp config set \
@@ -34,5 +40,5 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: app
+        app-name: my-web-app-ui
+        package: ./app
