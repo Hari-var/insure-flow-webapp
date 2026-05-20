@@ -2,9 +2,9 @@ name: Web App CD Pipeline
 on:
   workflow_run:
     workflows: ["React CI Pipeline"]
-    types: ["completed"]
+    types: [completed]
 env:
-  AZURE_WEBAPP_NAME: Testingwebapp
+  AZURE_WEBAPP_NAME: my-web-app-ui
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
       run: |
         az webapp config set \
           --name ${{ env.AZURE_WEBAPP_NAME }} \
-          --resource-group devops-maf \
+          --resource-group my-resource-group \
           --startup-file "npx serve -s /home/site/wwwroot"
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
