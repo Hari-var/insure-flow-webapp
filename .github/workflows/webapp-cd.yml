@@ -2,7 +2,7 @@ name: Web App CD Pipeline
 on:
   workflow_run:
     workflows: ["React CI Pipeline"]
-    types: ["completed"]
+    types: [completed]
 env:
   AZURE_WEBAPP_NAME: my-web-app-ui
 jobs:
