@@ -8,8 +8,8 @@ on:
       - master
 env:
   NODE_VERSION: '20.x'
-  PROJECT_NAME: 'Hari-var/insure-flow-webapp'
-  ARTIFACT_NAME: 'insureflowwebappdrop'
+  PROJECT_NAME: Hari-var/insure-flow-webapp
+  ARTIFACT_NAME: insure-flow-webapp-drop
 jobs:
   build:
     name: Build React Application
@@ -45,7 +45,7 @@ jobs:
       - name: Semgrep — Code Analysis
         uses: returntocorp/semgrep-action@v1
         with:
-          config: auto
+          config: 'auto'
       - name: Trivy — Dependency Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -61,8 +61,8 @@ jobs:
         with:
           name: build-output
           path: build/
-      - name: Publish insureflowwebappdrop
+      - name: Publish insure-flow-webapp-drop
         uses: actions/upload-artifact@v4
         with:
-          name: insureflowwebappdrop
+          name: insure-flow-webapp-drop
           path: build/
